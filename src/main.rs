@@ -13,8 +13,25 @@ fn main() {
 }
 
 type FizzBuzzFn = fn(u32) -> String;
-const ALL_FIZZBUZZS: [FizzBuzzFn; 3] = [brute_fizzbuzz, accumulate_fizzbuzz, compositional_fizzbuzz];
-const ALL_FIZZBUZZ_NAMES: [&str; 3] = ["brute_fizzbuzz", "accumulate_fizzbuzz", "compositional_fizzbuzz"];
+const ALL_FIZZBUZZS: [FizzBuzzFn; 7] = [
+    brute_fizzbuzz,
+    accumulate_fizzbuzz,
+    compositional_fizzbuzz,
+    bitaccumulate_fizzbuzz,
+    matchbox_fizzbuzz,
+    branchless_fizzbuzz,
+    smartbranchless_fizzbuzz,
+];
+
+const ALL_FIZZBUZZ_NAMES: [&str; 7] = [
+    "brute_fizzbuzz",
+    "accumulate_fizzbuzz",
+    "compositional_fizzbuzz",
+    "bitaccumulate_fizzbuzz",
+    "matchbox_fizzbuzz",
+    "branchless_fizzbuzz",
+    "smartbranchless_fizzbuzz",
+];
 
 fn brute_fizzbuzz(num: u32) -> String {
     if num % 15 == 0 {
@@ -45,8 +62,27 @@ fn accumulate_fizzbuzz(num: u32) -> String {
     result
 }
 
+fn bitaccumulate_fizzbuzz(num: u32) -> String {
+    let results: [&str; 3] = ["Fizz", "Buzz", "FizzBuzz"];
+    let mut idx = 0;
+
+    if num % 3 == 0 {
+        idx += 1;
+    }
+
+    if num % 5 == 0 {
+        idx += 2;
+    }
+
+    if idx == 0 {
+        num.to_string()
+    } else {
+        String::from(results[idx - 1])
+    }
+}
+
 fn compositional_fizzbuzz(num: u32) -> String {
-    fn opti_buzz(num:u32) -> String {
+    fn opti_buzz(num: u32) -> String {
         if num % 5 == 0 {
             String::from("FizzBuzz")
         } else {
@@ -54,7 +90,7 @@ fn compositional_fizzbuzz(num: u32) -> String {
         }
     }
 
-    fn pessi_buzz(num:u32) -> String {
+    fn pessi_buzz(num: u32) -> String {
         if num % 5 == 0 {
             String::from("Buzz")
         } else {
@@ -69,18 +105,63 @@ fn compositional_fizzbuzz(num: u32) -> String {
     }
 }
 
+fn matchbox_fizzbuzz(num: u32) -> String {
+    match num % 3 {
+        0 => match num % 5 {
+            0 => String::from("FizzBuzz"),
+            _ => String::from("Fizz"),
+        },
+        _ => match num % 5 {
+            0 => String::from("Buzz"),
+            _ => num.to_string(),
+        },
+    }
+}
+
+fn branchless_fizzbuzz(num: u32) -> String {
+    let fizzdex = [1, 0, 0];
+    let buzzdex = [2, 0, 0, 0, 0];
+    let results = [&num.to_string(), "Fizz", "Buzz", "FizzBuzz"];
+    let mut idx = 0;
+    idx += fizzdex[(num % 3) as usize];
+    idx += buzzdex[(num % 5) as usize];
+    results[idx].to_string()
+}
+
+fn smartbranchless_fizzbuzz(num: u32) -> String {
+    fn fizzbuzz_answer(idx: usize, _num: u32) -> String {
+        let results: [&str; 4] = ["", "Fizz", "Buzz", "FizzBuzz"];
+        results[idx].to_string()
+    }
+
+    fn num_answer(_idx: usize, num: u32) -> String {
+        num.to_string()
+    }
+
+    let fizzdex = [1, 0, 0];
+    let buzzdex = [2, 0, 0, 0, 0];
+    let results = [
+        num_answer,
+        fizzbuzz_answer,
+        fizzbuzz_answer,
+        fizzbuzz_answer,
+    ];
+    let mut idx = 0;
+    idx += fizzdex[(num % 3) as usize];
+    idx += buzzdex[(num % 5) as usize];
+    results[idx](idx, num)
+}
+
 #[cfg(test)]
 mod tests {
     #[allow(unused_imports)]
     use super::*;
 
-
     const TEST_NUMS: [u32; 14] = [3, 9, 12, 5, 10, 20, 15, 30, 45, 1, 2, 7, 11, 22];
     const TEST_ANSWER: [&str; 14] = [
-        "Fizz", "Fizz", "Fizz", "Buzz", "Buzz", "Buzz", "FizzBuzz", "FizzBuzz", "FizzBuzz", "1", "2", "7",
-        "11", "22",
+        "Fizz", "Fizz", "Fizz", "Buzz", "Buzz", "Buzz", "FizzBuzz", "FizzBuzz", "FizzBuzz", "1",
+        "2", "7", "11", "22",
     ];
-
 
     #[test]
     fn test_all_fizzbuzz() {
