@@ -13,24 +13,30 @@ fn main() {
 }
 
 type FizzBuzzFn = fn(u32) -> String;
-const ALL_FIZZBUZZS: [FizzBuzzFn; 7] = [
+const ALL_FIZZBUZZS: [FizzBuzzFn; 10] = [
     brute_fizzbuzz,
+    worsebrute_fizzbuzz,
     accumulate_fizzbuzz,
     compositional_fizzbuzz,
     bitaccumulate_fizzbuzz,
     matchbox_fizzbuzz,
     branchless_fizzbuzz,
     smartbranchless_fizzbuzz,
+    branchful_fizzbuzz,
+    doof_fizzbuzz,
 ];
 
-const ALL_FIZZBUZZ_NAMES: [&str; 7] = [
+const ALL_FIZZBUZZ_NAMES: [&str; 10] = [
     "brute_fizzbuzz",
+    "worsebrute_fizzbuzz",
     "accumulate_fizzbuzz",
     "compositional_fizzbuzz",
     "bitaccumulate_fizzbuzz",
     "matchbox_fizzbuzz",
     "branchless_fizzbuzz",
     "smartbranchless_fizzbuzz",
+    "branchful_fizzbuzz",
+    "doof_fizzbuzz",
 ];
 
 fn brute_fizzbuzz(num: u32) -> String {
@@ -40,6 +46,18 @@ fn brute_fizzbuzz(num: u32) -> String {
         String::from("Fizz")
     } else if num % 5 == 0 {
         String::from("Buzz")
+    } else {
+        num.to_string()
+    }
+}
+
+fn worsebrute_fizzbuzz(num: u32) -> String {
+    if num % 15 == 0 {
+        String::from("FizzBuzz")
+    } else if num % 5 == 0 {
+        String::from("Buzz")
+    } else if num % 3 == 0 {
+        String::from("Fizz")
     } else {
         num.to_string()
     }
@@ -150,6 +168,37 @@ fn smartbranchless_fizzbuzz(num: u32) -> String {
     idx += fizzdex[(num % 3) as usize];
     idx += buzzdex[(num % 5) as usize];
     results[idx](idx, num)
+}
+
+fn branchful_fizzbuzz(num: u32) -> String {
+    let results: [&str; 4] = ["", "Fizz", "Buzz", "FizzBuzz"];
+    let fizzdex = [1, 0, 0];
+    let buzzdex = [2, 0, 0, 0, 0];
+    let mut idx = 0;
+    idx += fizzdex[(num % 3) as usize];
+    idx += buzzdex[(num % 5) as usize];
+    if idx == 0 {
+        num.to_string()
+    } else {
+        results[idx].to_string()
+    }
+}
+
+fn doof_fizzbuzz(num: u32) -> String {
+    fn doof_mod(num: u32, check: u32) -> bool {
+        let div = num/check;
+        (div * check) == num
+    }
+
+    if doof_mod(num, 15) {
+        String::from("FizzBuzz")
+    } else if doof_mod(num, 3) {
+        String::from("Fizz")
+    } else if doof_mod(num, 5) {
+        String::from("Buzz")
+    } else {
+        num.to_string()
+    }
 }
 
 #[cfg(test)]
