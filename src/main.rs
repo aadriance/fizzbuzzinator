@@ -1,14 +1,30 @@
 use std::time::Instant;
 
 fn main() {
-    for (idx, fizzbuzz) in ALL_FIZZBUZZS.iter().enumerate() {
-        let current = Instant::now();
-        for num in 0..10_000_000 {
-            fizzbuzz(num);
+    let mut results:Vec<Vec<f64>> = Vec::new();
+    for _fizzbuzz in ALL_FIZZBUZZS {
+        results.push(Vec::new());
+    }
+
+    for _iteration in 0..100 {
+        for (idx, fizzbuzz) in ALL_FIZZBUZZS.iter().enumerate() {
+            let current = Instant::now();
+            for num in 0..10_000_000 {
+                fizzbuzz(num);
+            }
+
+            let duration = current.elapsed();
+            results[idx].push(duration.as_secs_f64());
+        }
+    }
+
+    for (idx, name) in ALL_FIZZBUZZ_NAMES.iter().enumerate() {
+        print!("{}", name);
+        for val in &results[idx] {
+            print!(",{:?}", val);
         }
 
-        let duration = current.elapsed();
-        println!("{} ran in {:?}", ALL_FIZZBUZZ_NAMES[idx], duration);
+        println!();
     }
 }
 
