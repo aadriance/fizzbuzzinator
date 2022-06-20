@@ -56,4 +56,6 @@ Drusselstein Tech, you following?
 For real, I ran accross ["FizzBuzz in Haskell by Embedding a Domain-Specific Language"](https://themonadreader.files.wordpress.com/2014/04/fizzbuzz.pdf).
 It was all over from there. I couldn't get FizzBuzz out of my head and thinking
 of different way to solve it. The natrual conclusion was needing to race all
-those solutions.
+those solutions. I have turned all of this nonsense into a [blog post](https://www.andrewadriance.com/posts/fizzbuzzinator/). So worth it I guess?
+
+Something something [learning in public](https://www.swyx.io/learn-in-public/)
