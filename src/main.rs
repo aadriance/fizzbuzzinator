@@ -29,7 +29,7 @@ fn main() {
 }
 
 type FizzBuzzFn = fn(u32) -> String;
-const ALL_FIZZBUZZS: [FizzBuzzFn; 10] = [
+const ALL_FIZZBUZZS: [FizzBuzzFn; 11] = [
     brute_fizzbuzz,
     worsebrute_fizzbuzz,
     accumulate_fizzbuzz,
@@ -40,9 +40,10 @@ const ALL_FIZZBUZZS: [FizzBuzzFn; 10] = [
     smartbranchless_fizzbuzz,
     branchful_fizzbuzz,
     doof_fizzbuzz,
+    tuple_match_fizzbuzz,
 ];
 
-const ALL_FIZZBUZZ_NAMES: [&str; 10] = [
+const ALL_FIZZBUZZ_NAMES: [&str; 11] = [
     "brute_fizzbuzz",
     "worsebrute_fizzbuzz",
     "accumulate_fizzbuzz",
@@ -53,6 +54,7 @@ const ALL_FIZZBUZZ_NAMES: [&str; 10] = [
     "smartbranchless_fizzbuzz",
     "branchful_fizzbuzz",
     "doof_fizzbuzz",
+    "tuple_match_fizzbuzz",
 ];
 
 /// brute_fizzbuzz is a brute force solution that does what is effectivley a
@@ -252,6 +254,17 @@ fn doof_fizzbuzz(num: u32) -> String {
         num.to_string()
     }
 }
+
+/// tuple_match_fizzbuzz uses tuple matching to optimize the computation
+fn tuple_match_fizzbuzz(num: u32) -> String {
+    match (num % 3, num % 5) {
+        (0, 0) => "FizzBuzz".into(),
+        (0, _) => "Fizz".into(),
+        (_, 0) => "Buzz".into(),
+        _  => num.to_string()
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
